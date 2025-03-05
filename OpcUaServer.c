@@ -120,10 +120,11 @@ typedef struct {
    int32_t Ch4_sum;
 } pulse_data;
 
-pulse_data block;
-
-// value for a variable creation test
-int32_t test_rss = 42;
+// This is the last received data block from the stream.
+// It is written asynchronously by the receiver thread.
+// While the thread is writing the block the according semaphore is set.
+pulse_data stream_data_block;
+bool stream_data_block_writing_active = false;
 
 /***********************************/
 /* generic read/write methods      */
@@ -201,6 +202,9 @@ int main(int argc, char** argv)
         printf("opened /dev/libera.strm0 with fd=%d\n",stream_fd);
     };
 
+    // set some default data for testing
+    stream_data_block.Ch1_peak = 567;
+    stream_data_block.Ch1_avg = 12;
 
     //**************************************
     // create and populate the device folder
@@ -216,30 +220,6 @@ int main(int argc, char** argv)
     // add manually coded variables
     //**************************************
     
-    // create a data source variable
-    attr = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr.value, &test_rss, &UA_TYPES[UA_TYPES_INT32]);
-    attr.description = UA_LOCALIZEDTEXT("en_US","the universal answer");
-    attr.displayName = UA_LOCALIZEDTEXT("en_US","test_rss");
-	attr.valueRank = UA_VALUERANK_SCALAR;
-    attr.accessLevel = UA_ACCESSLEVELMASK_READ;
-    UA_DataSource testDataSource = (UA_DataSource)
-        {
-            .read = read_UA_Int32,
-            .write = NULL
-        };
-    UA_Server_addDataSourceVariableNode(
-            server,
-            UA_NODEID_STRING(1, "test_rss"),
-            pulse_dataFolder,
-            UA_NS0ID(ORGANIZES),
-            UA_QUALIFIEDNAME(1, "test_rss"),
-            UA_NS0ID(BASEDATAVARIABLETYPE),
-            attr,
-            testDataSource,
-            (void *) &test_rss,
-            NULL);
-
     // run the server (forever unless stopped with ctrl-C)
     UA_StatusCode retval = UA_Server_run(server, &running);
     

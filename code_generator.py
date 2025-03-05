@@ -143,6 +143,37 @@ class Node(dict):
         code += f'''            NULL);\n'''
         return code
 
+class Internal(dict):
+    def __init__(self, name, parent_node_id):
+        super().__init__(name=name, parent_node_id=parent_node_id)  
+    def generate_main_code(self):
+        code = f'''    attr = UA_VariableAttributes_default;\n'''
+        code += f'''    UA_Variant_setScalar(&attr.value, &({self['var']}), &UA_TYPES[{self['ua_type_desc']}]);\n'''
+        code += f'''    attr.description = UA_LOCALIZEDTEXT("en_US","{self['description']}");\n'''
+        code += f'''    attr.displayName = UA_LOCALIZEDTEXT("en_US","{self['name']}");\n'''
+        code += f'''	attr.valueRank = UA_VALUERANK_SCALAR;\n'''
+        code += f'''    attr.accessLevel = UA_ACCESSLEVELMASK_READ;\n'''
+        code += f'''    UA_DataSource {self['name']}_DataSource = (UA_DataSource)\n'''
+        code += '''        {\n'''
+        code += f'''            .read = read_{self['ua_type']},\n'''
+        code += f'''            .write = NULL\n'''
+        code += '''        };\n'''
+        code += f'''    UA_Server_addDataSourceVariableNode(\n'''
+        code += f'''            server,\n'''
+        code += f'''            UA_NODEID_STRING(1, "{self['name']}"),\n'''
+        code += f'''            {self['parent_node_id']},\n'''
+        code += f'''            UA_NS0ID(ORGANIZES),\n'''
+        code += f'''            UA_QUALIFIEDNAME(1, "{self['name']}"),\n'''
+        code += f'''            UA_NS0ID(BASEDATAVARIABLETYPE),\n'''
+        code += f'''            attr,\n'''
+        code += f'''            {self['name']}_DataSource,\n'''
+        code += f'''            (void *) &({self['var']}),\n'''
+        code += f'''            NULL);\n'''
+        return code
+
+
+
+
 # Load the XML file
 tree = ET.parse("variables.xml")
 root = tree.getroot()
@@ -153,6 +184,7 @@ root = tree.getroot()
 
 List_of_Folders = []
 List_of_Nodes = []
+List_of_Internals = []
 
 def traverse_tree(xml_node, parent_folder):
     # handle all <folder> children
@@ -170,6 +202,13 @@ def traverse_tree(xml_node, parent_folder):
         new_n.update(dict(f.attrib))
         List_of_Nodes.append(deepcopy(new_n))
         print('new node:', new_n)
+    # handle all <internal> children
+    for f in xml_node.findall("internal"):
+        new_i = Internal(name=f.get("name"), parent_node_id=parent_folder['node_id'])
+        # copy all attributes from the XML node into the Node dict
+        new_i.update(dict(f.attrib))
+        List_of_Internals.append(deepcopy(new_i))
+        print('new internal:', new_i)
 
 root_folder=Folder(name="OBJECTSFOLDER", parent_node_id="None")
 root_folder.update({'node_id':"UA_NS0ID(OBJECTSFOLDER)"})
@@ -182,6 +221,12 @@ print()
 
 for n in List_of_Nodes:
     print('Node: ', n)
+print()
+
+for i in List_of_Internals:
+    print('Internal: ', i)
+print()
+
 # -------------
 # generate code
 # -------------
@@ -191,6 +236,8 @@ for f in List_of_Folders:
     fd.write(f.generate_main_code())
 for n in List_of_Nodes:
     fd.write(n.generate_main_code())
+for i in List_of_Internals:
+    fd.write(i.generate_main_code())
 fd.close()
 
 fd = open('libera_mci.h.inc', 'w')

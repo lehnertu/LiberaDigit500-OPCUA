@@ -2,13 +2,13 @@
     <folder name="Application" description="Libera Digit 500 instrument">
         <folder name="hk" description="hardware configuration">
             <folder name="attenuation" description="attenuator settings">
-                <node name="Ch1" description="attenuator Ch1" mci_type="uint32_t" function="attenuation_ch1"
+                <node name="att_Ch1" description="attenuator Ch1" mci_type="uint32_t" function="attenuation_ch1"
                       token_string="application.hk.attenuation.Ch1" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
-                <node name="Ch2" description="attenuator Ch2" mci_type="uint32_t" function="attenuation_ch2"
+                <node name="att_Ch2" description="attenuator Ch2" mci_type="uint32_t" function="attenuation_ch2"
                       token_string="application.hk.attenuation.Ch2" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
-                <node name="Ch3" description="attenuator Ch3" mci_type="uint32_t" function="attenuation_ch3"
+                <node name="att_Ch3" description="attenuator Ch3" mci_type="uint32_t" function="attenuation_ch3"
                       token_string="application.hk.attenuation.Ch3" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
-                <node name="Ch4" description="attenuator Ch4" mci_type="uint32_t" function="attenuation_ch4"
+                <node name="att_Ch4" description="attenuator Ch4" mci_type="uint32_t" function="attenuation_ch4"
                       token_string="application.hk.attenuation.Ch4" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
             </folder>
         </folder>
@@ -59,14 +59,48 @@
                       token_string="application.dsp.pulse_processing.ignore_counter"
                       ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
             </folder>
-            <folder name="pulse_data" description="raw pulse data from stream">
-                <folder name="Ch1" description="Ch1">
-                    <internal name="Ch1_rss" description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-                    <internal name="Ch1_peak" description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-                    <internal name="Ch1_avg" description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-                    <internal name="Ch1_sum" description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-                </folder>
-            </folder>
+        </folder>
+    </folder>
+    <folder name="Pulse_data" description="raw pulse data from stream">
+        <folder name="Ch1" description="Ch1">
+            <internal name="Ch1_rss" var="stream_data_block.Ch1_rss"
+                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch1_peak" var="stream_data_block.Ch1_peak"
+                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch1_avg" var="stream_data_block.Ch1_avg"
+                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch1_sum" var="stream_data_block.Ch1_sum"
+                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+        </folder>
+        <folder name="Ch2" description="Ch2">
+            <internal name="Ch2_rss" var="stream_data_block.Ch2_rss"
+                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch2_peak" var="stream_data_block.Ch2_peak"
+                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch2_avg" var="stream_data_block.Ch2_avg"
+                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch2_sum" var="stream_data_block.Ch2_sum"
+                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+        </folder>
+        <folder name="Ch3" description="Ch3">
+            <internal name="Ch3_rss" var="stream_data_block.Ch3_rss"
+                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch3_peak" var="stream_data_block.Ch3_peak"
+                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch3_avg" var="stream_data_block.Ch3_avg"
+                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch3_sum" var="stream_data_block.Ch3_sum"
+                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+        </folder>
+        <folder name="Ch4" description="Ch4">
+            <internal name="Ch4_rss" var="stream_data_block.Ch4_rss"
+                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch4_peak" var="stream_data_block.Ch4_peak"
+                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch4_avg" var="stream_data_block.Ch4_avg"
+                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <internal name="Ch4_sum" var="stream_data_block.Ch4_sum"
+                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
         </folder>
     </folder>
 </OPC-UA>
