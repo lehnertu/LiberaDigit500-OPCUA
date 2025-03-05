@@ -1,0 +1,73 @@
+<OPC-UA>
+    <folder name="Application" description="Libera Digit 500 instrument">
+        <folder name="hk" description="hardware configuration">
+            <folder name="attenuation" description="attenuator settings">
+                <node name="Ch1" description="attenuator Ch1" mci_type="uint32_t" function="attenuation_ch1"
+                      token_string="application.hk.attenuation.Ch1" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+                <node name="Ch2" description="attenuator Ch2" mci_type="uint32_t" function="attenuation_ch2"
+                      token_string="application.hk.attenuation.Ch2" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+                <node name="Ch3" description="attenuator Ch3" mci_type="uint32_t" function="attenuation_ch3"
+                      token_string="application.hk.attenuation.Ch3" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+                <node name="Ch4" description="attenuator Ch4" mci_type="uint32_t" function="attenuation_ch4"
+                      token_string="application.hk.attenuation.Ch4" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+            </folder>
+        </folder>
+        <folder name="dsp">
+            <folder name="trigger" description="configure trigger">
+                <node name="delay" description="delay acquisition after trigger"
+                      mci_type="uint32_t" function="trigger_delay"
+                      token_string="application.dsp.trigger.delay" ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+            </folder>
+            <node name="arm_number" description="number of consecutive triggers" mci_type="uint32_t" function="arm_number"
+                  token_string="application.dsp.arm_number" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <node name="arm_counter" description="current  number of triggers recorded"
+                  mci_type="uint32_t" function="arm_counter"
+                  token_string="application.dsp.arm_counter" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            <folder name="calibration" description="ADC calibration values">
+                <node name="offs_Ch1" description="ADC offset Ch1"
+                      mci_type="int32_t" function="offs_ch1"
+                      token_string="application.dsp.calibration.offs_Ch1" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <node name="offs_Ch2" description="ADC offset Ch2"
+                      mci_type="int32_t" function="offs_ch2"
+                      token_string="application.dsp.calibration.offs_Ch1" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <node name="offs_Ch3" description="ADC offset Ch3" 
+                      mci_type="int32_t" function="offs_ch3"
+                      token_string="application.dsp.calibration.offs_Ch1" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <node name="offs_Ch4" description="ADC offset Ch4"
+                      mci_type="int32_t" function="offs_ch4"
+                      token_string="application.dsp.calibration.offs_Ch1" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            </folder>
+            <folder name="pulse_processing" description="configure pulse data acquisition">
+                <node name="enable" description="enable pulse processing"
+                      mci_type="bool" function="pulse_enable" no_mci_code="1"
+                      token_string="application.dsp.pulse_processing.enable"
+                      ua_type="UA_Boolean" ua_type_desc="UA_TYPES_BOOLEAN"/>
+                <node name="threshold" description="trigger threshold"
+                      mci_type="int32_t" function="pulse_threshold"
+                      token_string="application.dsp.pulse_processing.threshold"
+                      ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <node name="pretrigger" description="number of pre-trigger samples"
+                      mci_type="uint32_t" function="pulse_pretrigger"
+                      token_string="application.dsp.pulse_processing.pretrigger"
+                      ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+                <node name="posttrigger" description="number of post-trigger samples"
+                      mci_type="uint32_t" function="pulse_posttrigger"
+                      token_string="application.dsp.pulse_processing.posttrigger"
+                      ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+                <node name="ignore_counter" description="hold-off time after trigger"
+                      mci_type="uint32_t" function="pulse_ignore_counter"
+                      token_string="application.dsp.pulse_processing.ignore_counter"
+                      ua_type="UA_UInt32" ua_type_desc="UA_TYPES_UINT32"/>
+            </folder>
+            <folder name="pulse_data" description="raw pulse data from stream">
+                <folder name="Ch1" description="Ch1">
+                    <internal name="Ch1_rss" description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                    <internal name="Ch1_peak" description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                    <internal name="Ch1_avg" description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                    <internal name="Ch1_sum" description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</OPC-UA>
+
