@@ -57,6 +57,7 @@ The packages were manually extracted and the headers copied into local directori
 
 This is proprietory software by Instrumentation Technologies and can not be included here.
 Any user of the server provided here needs to contact the manufacturer for these header files.
+The binary libraries can be copied from the instrument.
 
 ## Compile and link the server
 
