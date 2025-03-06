@@ -61,46 +61,52 @@
             </folder>
         </folder>
     </folder>
-    <folder name="Pulse_data" description="raw pulse data from stream">
-        <folder name="Ch1" description="Ch1">
-            <internal name="Ch1_rss" var="stream_data_block.Ch1_rss"
-                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch1_peak" var="stream_data_block.Ch1_peak"
-                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch1_avg" var="stream_data_block.Ch1_avg"
-                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch1_sum" var="stream_data_block.Ch1_sum"
-                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-        </folder>
-        <folder name="Ch2" description="Ch2">
-            <internal name="Ch2_rss" var="stream_data_block.Ch2_rss"
-                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch2_peak" var="stream_data_block.Ch2_peak"
-                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch2_avg" var="stream_data_block.Ch2_avg"
-                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch2_sum" var="stream_data_block.Ch2_sum"
-                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-        </folder>
-        <folder name="Ch3" description="Ch3">
-            <internal name="Ch3_rss" var="stream_data_block.Ch3_rss"
-                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch3_peak" var="stream_data_block.Ch3_peak"
-                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch3_avg" var="stream_data_block.Ch3_avg"
-                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch3_sum" var="stream_data_block.Ch3_sum"
-                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-        </folder>
-        <folder name="Ch4" description="Ch4">
-            <internal name="Ch4_rss" var="stream_data_block.Ch4_rss"
-                description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch4_peak" var="stream_data_block.Ch4_peak"
-                description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch4_avg" var="stream_data_block.Ch4_avg"
-                description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
-            <internal name="Ch4_sum" var="stream_data_block.Ch4_sum"
-                description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+    <folder name="Pulse_acquisition" description="pulse data from stream">
+        <internal name="pulse_cnt" var="pulse_counter"
+            description="counter for pulses" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+        <internal name="pps" var="pulse_stream_pps"
+            description="number of pulses per second" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+        <folder name="Pulse_data" description="raw pulse data from stream">
+            <folder name="Ch1" description="Ch1">
+                <internal name="Ch1_rss" var="stream_data_block.Ch1_rss"
+                    description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch1_peak" var="stream_data_block.Ch1_peak"
+                    description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch1_avg" var="stream_data_block.Ch1_avg"
+                    description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch1_sum" var="stream_data_block.Ch1_sum"
+                    description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            </folder>
+            <folder name="Ch2" description="Ch2">
+                <internal name="Ch2_rss" var="stream_data_block.Ch2_rss"
+                    description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch2_peak" var="stream_data_block.Ch2_peak"
+                    description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch2_avg" var="stream_data_block.Ch2_avg"
+                    description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch2_sum" var="stream_data_block.Ch2_sum"
+                    description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            </folder>
+            <folder name="Ch3" description="Ch3">
+                <internal name="Ch3_rss" var="stream_data_block.Ch3_rss"
+                    description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch3_peak" var="stream_data_block.Ch3_peak"
+                    description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch3_avg" var="stream_data_block.Ch3_avg"
+                    description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch3_sum" var="stream_data_block.Ch3_sum"
+                    description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            </folder>
+            <folder name="Ch4" description="Ch4">
+                <internal name="Ch4_rss" var="stream_data_block.Ch4_rss"
+                    description="root sum of squares" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch4_peak" var="stream_data_block.Ch4_peak"
+                    description="peak value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch4_avg" var="stream_data_block.Ch4_avg"
+                    description="average value" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+                <internal name="Ch4_sum" var="stream_data_block.Ch4_sum"
+                    description="sum of values" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
+            </folder>
         </folder>
     </folder>
 </OPC-UA>

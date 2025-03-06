@@ -63,6 +63,7 @@ SOFTWARE.
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>        // for fstat()
+#include <pthread.h>         // for threads
 
 #include "open62541.h"       // the OPC-UA library
 #include "libera_opcua.h"
@@ -119,12 +120,66 @@ typedef struct {
    int32_t Ch4_avg;
    int32_t Ch4_sum;
 } pulse_data;
+#define BLOCKSIZE 64
 
 // This is the last received data block from the stream.
 // It is written asynchronously by the receiver thread.
 // While the thread is writing the block the according semaphore is set.
-pulse_data stream_data_block;
-bool stream_data_block_writing_active = false;
+static volatile pulse_data stream_data_block;
+static volatile bool stream_data_block_writing_active = false;
+static volatile int32_t pulse_counter = 0;
+static volatile int32_t pulse_stream_pps = 0;
+
+// Read the data from the pulse-processing stream and write into the global data block.
+// This procedure will be forked off as a parallel thread.
+// It needs the file descriptor of the open stream as a parameter.
+// It runs until the OPC UA server is stopped.
+void* read_pulse_Stream(void *arg)
+{
+    char readbuffer[BLOCKSIZE];             // buffer for reading from the data stream
+    
+    int fd = *((int *)arg);
+    printf("OpcUaServer : reading from fd=%d\n",fd);
+
+    while (running)
+    {
+        int bytes_read = read(fd, readbuffer, BLOCKSIZE);
+        // handle read errors
+        if (-1 == bytes_read)
+        {
+            int errsv=errno;
+            fprintf(stderr, "OpcUaServer : read() from data stream");
+            sleep(0.1);
+        };
+        // handle proper data blocks
+        if (BLOCKSIZE==bytes_read)
+        {
+            stream_data_block_writing_active = true;
+            pulse_counter++;
+            // copy data from buffer to struct
+            memcpy((void *) &stream_data_block, readbuffer, BLOCKSIZE);
+            stream_data_block_writing_active = false;
+        };
+    };
+    printf("OpcUaServer : read thread exit\n");
+    pthread_exit(NULL);
+}
+
+// Once every second the pulse repetition rate is computed
+// and the pulse counter reset to zero.
+void* timer_thread(void* arg) {
+    (void)arg;  // Unused parameter
+    while (running) {
+        sleep(1.0);
+        stream_data_block_writing_active = true;
+        pulse_stream_pps = pulse_counter;
+        pulse_counter = 0;
+        stream_data_block_writing_active = false;
+    }
+    printf("OpcUaServer : timer thread exit\n");
+    pthread_exit(NULL);
+}
+
 
 /***********************************/
 /* generic read/write methods      */
@@ -139,6 +194,9 @@ static UA_StatusCode read_UA_Int32(
     const UA_NumericRange *range,
     UA_DataValue *dataValue)
 {
+    // wait for semaphore because
+    // this read method is mainly used for data stream related variables
+    while (stream_data_block_writing_active);
     UA_Variant_setScalarCopy(&dataValue->value, (UA_Int32*)nodeContext, &UA_TYPES[UA_TYPES_INT32]);
     dataValue->hasValue = true;
     return UA_STATUSCODE_GOOD;
@@ -151,7 +209,8 @@ static UA_StatusCode write_UA_Int32(
     const UA_NumericRange *range,
     const UA_DataValue *data)
 {
-    if(UA_Variant_isScalar(&(data->value)) && data->value.type == &UA_TYPES[UA_TYPES_INT32] && data->value.data){
+    if (UA_Variant_isScalar(&(data->value)) && data->value.type == &UA_TYPES[UA_TYPES_INT32] && data->value.data)
+    {
         *(UA_Int32*)nodeContext = *(UA_Int32*)data->value.data;
     }
     return UA_STATUSCODE_GOOD;
@@ -196,15 +255,24 @@ int main(int argc, char** argv)
     int stream_fd = open("/dev/libera.strm0", O_RDONLY);
     if (stream_fd == -1)
     {
-        perror("failed to open /dev/libera.strm0");
-        return(-1);
+        Die("OpcUaServer : failed to open /dev/libera.strm0");
     } else {
         printf("opened /dev/libera.strm0 with fd=%d\n",stream_fd);
     };
 
-    // set some default data for testing
-    stream_data_block.Ch1_peak = 567;
-    stream_data_block.Ch1_avg = 12;
+    // fork off a thread that reads the stream data
+    pthread_t stream_tid;
+    if (0 != pthread_create(&stream_tid, NULL, &read_pulse_Stream, (void *)&stream_fd))
+        Die("OpcUaServer : failed to create pulse read thread");
+    else
+        printf("OpcUaServer : pulse read thread created successfully\n");
+
+    // fork off a thread for the pulse counting
+    pthread_t timer_tid;
+    if (0 != pthread_create(&timer_tid, NULL, timer_thread, NULL))
+        Die("OpcUaServer : failed to create timer thread");
+    else
+        printf("OpcUaServer : timer thread created successfully\n");
 
     //**************************************
     // create and populate the device folder
@@ -230,8 +298,17 @@ int main(int argc, char** argv)
     UA_Server_delete(server);
     // nl.deleteMembers(&nl);
 
-    // close the stream
-    close(stream_fd);
+    // wait for the read and timer threads to exit
+    pthread_join(stream_tid, NULL);
+    pthread_join(timer_tid, NULL);
+
+    int status = close(stream_fd);
+    if (-1==status)
+        perror("OpcUaServer : problems closing source stream");
+    else
+        printf("OpcUaServer : data stream closed.\n");
+
+    mci_shutdown();
     
     printf("OpcUaServer : graceful exit\n");
     

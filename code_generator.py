@@ -148,7 +148,7 @@ class Internal(dict):
         super().__init__(name=name, parent_node_id=parent_node_id)  
     def generate_main_code(self):
         code = f'''    attr = UA_VariableAttributes_default;\n'''
-        code += f'''    UA_Variant_setScalar(&attr.value, &({self['var']}), &UA_TYPES[{self['ua_type_desc']}]);\n'''
+        code += f'''    UA_Variant_setScalar(&attr.value, (void *) &({self['var']}), &UA_TYPES[{self['ua_type_desc']}]);\n'''
         code += f'''    attr.description = UA_LOCALIZEDTEXT("en_US","{self['description']}");\n'''
         code += f'''    attr.displayName = UA_LOCALIZEDTEXT("en_US","{self['name']}");\n'''
         code += f'''	attr.valueRank = UA_VALUERANK_SCALAR;\n'''
