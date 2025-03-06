@@ -40,6 +40,7 @@ This can be done on the development system - there is no binary code produced at
 The complete stack is obtained in two (amalgamated) files.
 - open62541.h
 - open62541.c
+
 For easy access these 2 files are included with the repository but these need to be regenerated if
 any configuration change of the server stack is desired.
 
