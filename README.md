@@ -1,4 +1,4 @@
-# LiberaDigit500-OPCUA - OPC UA server for the Libera Digit 500
+# OPC UA server for the Libera Digit 500
 
 This is an OPC UA server running on the
 [Libera Digit 500](https://www.i-tech.si/products/libera-digit-500/)
@@ -11,6 +11,8 @@ open source implementation of OPC UA.
 
 - Provides an OPC-UA server at TCP/IP port 10001.
 - Access to device is handled via the internal MCI facility.
+- The data stream created from the pulse processing is intercepted, the last received data block
+is available through the server.
 
 # Project status
 
@@ -21,6 +23,10 @@ MCI variables is established. The variable content imaged by the
 OPC-UA server is defined in an XML file. A code generator is provided
 to generate the necessary C/C++ code for the server application.
 This does not cover the whole functionality provided by the devices, only the essentials.
+
+The pulse data stream is intercepted and the data content made available as scalar values.
+
+The number of pulses received per second is determined and reported.
 
 # Build
 
@@ -48,11 +54,15 @@ The packages were manually extracted and the headers copied into local directori
 - `LiberaDigit500-OPCUA/mci/*`
 - `LiberaDigit500-OPCUA/isig/*`
 
+This is proprietory software by Instrumentation Technologies and can not be included here.
+Any user of the server provided here needs to contact the manufacturer for these header files.
+
 ## Compile and link the server
-Before the C/C++ code can be compiled the needed code snippets
+
+Before the C/C++ code can be compiled the several code snippets (*.inc files)
 need to be created with the code generator. This needs to be done
-before initializing the cross-target tool chain as this interferes
-with the python environment settings on the delepment system.
+before activating the cross-target tool chain as this interferes
+with the python environment settings on the development system.
 - `python3 code_generator.py`
 
 A makefile is not yet provided, just a few lines are required to build the server.
@@ -74,6 +84,7 @@ the data stream and restart the digit500 application.
 - `/opt/etc/init.d/S50libera-digit500 restart`
 
 Then the server can be started
+- `ssh root@instrument`
 - `cd /tmp/`
 - `./opcua_server`
 
