@@ -61,9 +61,15 @@
             </folder>
         </folder>
     </folder>
+    <folder name="Event" description="external triggering">
+        <node name="now" description="current time" mci_type="uint64_t" function="event_now"
+              token_string="application.events.current_time" ua_type="UA_UInt64" ua_type_desc="UA_TYPES_UINT64"/>
+        <node name="t2_time" description="timeof last t2 trigger" mci_type="uint64_t" function="t2_time"
+              token_string="application.events.t2.timestamp" ua_type="UA_UInt64" ua_type_desc="UA_TYPES_UINT64"/>
+        <node name="t2_count" description="count of t2 triggers" mci_type="uint64_t" function="t2_count"
+              token_string="application.events.t2.count" ua_type="UA_UInt64" ua_type_desc="UA_TYPES_UINT64"/>
+    </folder>
     <folder name="Pulse_acquisition" description="pulse data from stream">
-        <internal name="pulse_cnt" var="pulse_counter"
-            description="counter for pulses" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
         <internal name="pps" var="pulse_stream_pps"
             description="number of pulses per second" ua_type="UA_Int32" ua_type_desc="UA_TYPES_INT32"/>
         <folder name="Pulse_data" description="raw pulse data from stream">
